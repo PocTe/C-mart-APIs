@@ -11,6 +11,7 @@ namespace C_mart_APIs.Data
         }
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
+            modelBuilder.Entity<CartItem>().HasKey(c => new { c.productId, c.UserId });
             modelBuilder.Entity<User_Role>()
                 .HasOne(x => x.Role)
                 .WithMany(y => y.User_Roles)
@@ -23,5 +24,6 @@ namespace C_mart_APIs.Data
         public DbSet<User> Users { get; set; }
         public DbSet<Role> Roles { get; set; }
         public DbSet<User_Role> User_Roles { get; set; }
+        public DbSet<CartItem> CartItems { get; set; }
     }
 }

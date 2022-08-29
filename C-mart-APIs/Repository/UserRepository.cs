@@ -2,6 +2,8 @@
 using C_mart_APIs.Model;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Exchange.WebServices.Data;
+using Org.BouncyCastle.Crypto.Generators;
+using System.Security.Cryptography;
 
 namespace C_mart_APIs.Repository
 {
@@ -13,6 +15,15 @@ namespace C_mart_APIs.Repository
         {
             this.context = context;
         }
+
+        public async Task<User> AddAsync(User user)
+        {
+            user.Id = Guid.NewGuid();
+            await context.AddAsync(user);
+            await context.SaveChangesAsync();
+            return user;
+        }
+
         public async Task<User> AuthenticateAsync(string username, string password)
         {
             var user = await context.Users.FirstOrDefaultAsync
@@ -35,6 +46,17 @@ namespace C_mart_APIs.Repository
                 }
             }
             user.Password = null;
+            return user;
+        }
+
+        public IEnumerable<User> GetAll()
+        {
+            return context.Users.ToList();
+        }
+
+        public async Task<User> GetuserAsync(Guid id)
+        {
+          var user= await context.Users.FirstOrDefaultAsync(x=>x.Id==id);
             return user;
         }
     }
